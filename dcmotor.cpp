@@ -9,7 +9,7 @@ void dcmotor::Open(const QString &comport, const int baudrate)
 {
 
         this->QSerialPort::close();                 // reset the comport
-    qDebug() << "test";
+//    qDebug() << "test";
         this->QSerialPort::setPortName(comport);
         switch (baudrate) {
         case 9600:
@@ -34,10 +34,6 @@ void dcmotor::Open(const QString &comport, const int baudrate)
         this->QSerialPort::open(QSerialPort::ReadWrite);
 }
 
-void dcmotor::test()
-{
-    qDebug() << "test";
-}
 
 void dcmotor::SetHome()
 {
@@ -45,7 +41,7 @@ void dcmotor::SetHome()
     cmd << "HO\n";
     this->write(cmd.str().c_str(), strlen(cmd.str().c_str()));
     command_queue.push(command::OK);
-    std::cout << "command_queue size = " << command_queue.size() << std::endl;
+//    std::cout << "command_queue size = " << command_queue.size() << std::endl;
 
 }
 
@@ -84,11 +80,20 @@ void dcmotor::SetMaxVelocity(double v_rpm)
 void dcmotor::RotateRelativeDistancce(int value)
 {
     std::stringstream cmd;
-    cmd << "LR" << value << "\n" << "M\r";
+    cmd << "LR" << value << "\n" << "NP\n" << "M\r";
     this->write(cmd.str().c_str(), strlen(cmd.str().c_str()));
+//    cv::waitKey(1000);
+//    QString shit = this->readAll();
 //    command_queue.push(command::OK);
 //    std::cout << "command_queue size = " << command_queue.size() << std::endl;
 //    command_queue.push(command::NP);
 //    std::cout << "command_queue size = " << command_queue.size() << std::endl;
 
+}
+
+QString dcmotor::readreadread()
+{
+    std::stringstream cmd;
+    QString a =this->readAll();
+    return a;
 }

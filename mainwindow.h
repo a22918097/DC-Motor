@@ -1,11 +1,23 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-
+#include <QMutex>
 #include <QMainWindow>
+#include <QList>
+#include <QStringList>
+#include <QObject>
 #include "dcmotor.h"
+#include "mythread.h"
+#include "opencv2/opencv.hpp"
+#include "myrobot.h"
 namespace Ui {
 class MainWindow;
 }
+enum DIRECTION{
+    front = 0,
+    back = 1,
+    leftleft = 2,
+    rightright = 3
+};
 
 class MainWindow : public QMainWindow
 {
@@ -14,9 +26,15 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-    dcmotor *right_dcmotor;
-    dcmotor *left_dcmotor;
 
+    MyRobot *myrobot;
+//    dcmotor *right_dcmotor;
+//    dcmotor *left_dcmotor;
+    QMutex mymutex;
+    QStringList command;
+    QList<QStringList> commandbuffer;
+    void runbuffer(int DIRECTION=0, double velocity=0 , double distance=0 , double angle=0);
+    bool waitting;
     void GoForward(double distance_m, double speed);
 
     void GoBackward(double distance_m, double speed);
@@ -57,8 +75,18 @@ private slots:
 
     void on_pushButton_R_clicked();
 
+    void on_pushButton_read_clicked();
+
+    void on_pushButton_clicked();
+
 private:
     Ui::MainWindow *ui;
+    Mythread *mthread;
+    //Mythread *mt;
+    void checkbusy();
+    bool busy;
+public slots:
+    void docheck();
 };
 
 #endif // MAINWINDOW_H

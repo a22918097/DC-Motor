@@ -14,10 +14,10 @@ CXX           = cl
 DEFINES       = -DUNICODE -DWIN32 -DWIN64 -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_SERIALPORT_LIB -DQT_CORE_LIB -DNDEBUG
 CFLAGS        = -nologo -Zc:wchar_t -FS -O2 -MD -Zc:strictStrings -W3 $(DEFINES)
 CXXFLAGS      = -nologo -Zc:wchar_t -FS -O2 -MD -Zc:strictStrings -GR -W3 -w34100 -w34189 -w44996 -EHsc $(DEFINES)
-INCPATH       = -I. -I..\..\..\..\Qt\5.7\msvc2013_64\include -I..\..\..\..\Qt\5.7\msvc2013_64\include\QtWidgets -I..\..\..\..\Qt\5.7\msvc2013_64\include\QtGui -I..\..\..\..\Qt\5.7\msvc2013_64\include\QtANGLE -I..\..\..\..\Qt\5.7\msvc2013_64\include\QtSerialPort -I..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore -Irelease -I. -I..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\win32-msvc2013 
+INCPATH       = -I. -I..\..\..\..\opencv\build\include -I..\..\..\..\Qt\5.7\msvc2013_64\include -I..\..\..\..\Qt\5.7\msvc2013_64\include\QtWidgets -I..\..\..\..\Qt\5.7\msvc2013_64\include\QtGui -I..\..\..\..\Qt\5.7\msvc2013_64\include\QtANGLE -I..\..\..\..\Qt\5.7\msvc2013_64\include\QtSerialPort -I..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore -Irelease -I. -I..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\win32-msvc2013 
 LINKER        = link
 LFLAGS        = /NOLOGO /DYNAMICBASE /NXCOMPAT /INCREMENTAL:NO /SUBSYSTEM:WINDOWS "/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'"
-LIBS          = /LIBPATH:C:\Qt\5.7\msvc2013_64\lib C:\Qt\5.7\msvc2013_64\lib\qtmain.lib /LIBPATH:C:\utils\postgresql\pgsql\lib /LIBPATH:C:\utils\my_sql\my_sql\lib shell32.lib C:\Qt\5.7\msvc2013_64\lib\Qt5Widgets.lib C:\Qt\5.7\msvc2013_64\lib\Qt5Gui.lib C:\Qt\5.7\msvc2013_64\lib\Qt5SerialPort.lib C:\Qt\5.7\msvc2013_64\lib\Qt5Core.lib 
+LIBS          = /LIBPATH:C:\Qt\5.7\msvc2013_64\lib C:\Qt\5.7\msvc2013_64\lib\qtmain.lib /LIBPATH:C:\utils\postgresql\pgsql\lib /LIBPATH:C:\utils\my_sql\my_sql\lib shell32.lib C:\opencv\build\x64\vc12\lib\opencv_ts300.lib C:\opencv\build\x64\vc12\lib\opencv_world300.lib C:\Qt\5.7\msvc2013_64\lib\Qt5Widgets.lib C:\Qt\5.7\msvc2013_64\lib\Qt5Gui.lib C:\Qt\5.7\msvc2013_64\lib\Qt5SerialPort.lib C:\Qt\5.7\msvc2013_64\lib\Qt5Core.lib 
 QMAKE         = C:\Qt\5.7\msvc2013_64\bin\qmake.exe
 IDC           = idc
 IDL           = midl
@@ -45,16 +45,28 @@ OBJECTS_DIR   = release
 
 SOURCES       = main.cpp \
 		mainwindow.cpp \
-		dcmotor.cpp release\moc_mainwindow.cpp
+		dcmotor.cpp \
+		mythread.cpp \
+		myrobot.cpp release\moc_mainwindow.cpp \
+		release\moc_mythread.cpp \
+		release\moc_myrobot.cpp
 OBJECTS       = release\main.obj \
 		release\mainwindow.obj \
 		release\dcmotor.obj \
-		release\moc_mainwindow.obj
+		release\mythread.obj \
+		release\myrobot.obj \
+		release\moc_mainwindow.obj \
+		release\moc_mythread.obj \
+		release\moc_myrobot.obj
 
 DIST          =  mainwindow.h \
-		dcmotor.h main.cpp \
+		dcmotor.h \
+		mythread.h \
+		myrobot.h main.cpp \
 		mainwindow.cpp \
-		dcmotor.cpp
+		dcmotor.cpp \
+		mythread.cpp \
+		myrobot.cpp
 QMAKE_TARGET  = Motor
 DESTDIR        = release\ #avoid trailing-slash linebreak
 TARGET         = Motor.exe
@@ -123,7 +135,7 @@ dist:
 	$(ZIP) Motor.zip $(SOURCES) $(DIST) Motor.pro ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\features\spec_pre.prf ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\common\angle.conf ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\common\msvc-base.conf ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\common\msvc-desktop.conf ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\qconfig.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_3dcore.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_3dcore_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_3dextras.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_3dextras_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_3dinput.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_3dinput_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_3dlogic.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_3dlogic_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_3dquick.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_3dquick_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_3dquickextras.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_3dquickextras_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_3dquickinput.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_3dquickinput_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_3dquickrender.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_3dquickrender_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_3drender.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_3drender_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_axbase.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_axbase_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_axcontainer.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_axcontainer_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_axserver.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_axserver_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_bluetooth.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_bluetooth_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_bootstrap_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_clucene_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_concurrent.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_concurrent_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_core.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_core_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_dbus.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_dbus_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_designer.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_designer_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_designercomponents_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_gamepad.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_gamepad_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_gui.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_gui_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_help.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_help_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_location.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_location_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_multimedia.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_multimedia_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_multimediawidgets.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_multimediawidgets_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_network.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_network_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_nfc.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_nfc_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_opengl.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_opengl_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_openglextensions.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_openglextensions_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_packetprotocol_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_platformsupport_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_positioning.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_positioning_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_printsupport.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_printsupport_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_purchasing.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_purchasing_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_qml.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_qml_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_qmldebug_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_qmldevtools_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_qmltest.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_qmltest_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_qtmultimediaquicktools_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_quick.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_quick_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_quickcontrols2.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_quickcontrols2_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_quickparticles_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_quicktemplates2_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_quickwidgets.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_quickwidgets_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_script.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_script_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_scripttools.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_scripttools_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_scxml.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_scxml_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_sensors.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_sensors_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_serialbus.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_serialbus_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_serialport.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_serialport_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_sql.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_sql_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_svg.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_svg_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_testlib.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_testlib_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_uiplugin.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_uitools.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_uitools_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_webchannel.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_webchannel_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_webengine.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_webengine_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_webenginecore.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_webenginecore_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_webenginecoreheaders_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_webenginewidgets.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_webenginewidgets_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_websockets.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_websockets_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_webview.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_webview_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_widgets.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_widgets_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_winextras.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_winextras_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_xml.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_xml_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_xmlpatterns.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_xmlpatterns_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\modules\qt_lib_zlib_private.pri ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\features\qt_functions.prf ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\features\qt_config.prf ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\features\win32\qt_config.prf ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\win32-msvc2013\qmake.conf ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\features\spec_post.prf .qmake.stash ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\features\exclusive_builds.prf ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\features\default_pre.prf ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\features\win32\default_pre.prf ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\features\resolve_config.prf ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\features\exclusive_builds_post.prf ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\features\default_post.prf ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\features\build_pass.prf ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\features\win32\rtti.prf ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\features\precompile_header.prf ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\features\warn_on.prf ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\features\qt.prf ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\features\resources.prf ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\features\moc.prf ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\features\win32\opengl.prf ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\features\uic.prf ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\features\file_copies.prf ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\features\win32\windows.prf ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\features\testcase_targets.prf ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\features\exceptions.prf ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\features\yacc.prf ..\..\..\..\Qt\5.7\msvc2013_64\mkspecs\features\lex.prf Motor.pro ..\..\..\..\Qt\5.7\msvc2013_64\lib\qtmain.prl ..\..\..\..\Qt\5.7\msvc2013_64\lib\Qt5Widgets.prl ..\..\..\..\Qt\5.7\msvc2013_64\lib\Qt5Gui.prl ..\..\..\..\Qt\5.7\msvc2013_64\lib\Qt5SerialPort.prl ..\..\..\..\Qt\5.7\msvc2013_64\lib\Qt5Core.prl  NO_PCH_SOURCES RESOURCES HEADERS SOURCES OBJECTIVE_SOURCES FORMS YACCSOURCES YACCSOURCES LEXSOURCES 
 
 clean: compiler_clean 
-	-$(DEL_FILE) release\main.obj release\mainwindow.obj release\dcmotor.obj release\moc_mainwindow.obj
+	-$(DEL_FILE) release\main.obj release\mainwindow.obj release\dcmotor.obj release\mythread.obj release\myrobot.obj release\moc_mainwindow.obj release\moc_mythread.obj release\moc_myrobot.obj
 	-$(DEL_FILE) release\Motor.exp
 
 distclean: clean 
@@ -143,13 +155,11 @@ compiler_no_pch_compiler_make_all:
 compiler_no_pch_compiler_clean:
 compiler_rcc_make_all:
 compiler_rcc_clean:
-compiler_moc_header_make_all: release\moc_mainwindow.cpp
+compiler_moc_header_make_all: release\moc_mainwindow.cpp release\moc_mythread.cpp release\moc_myrobot.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) release\moc_mainwindow.cpp
-release\moc_mainwindow.cpp: ..\..\..\..\Qt\5.7\msvc2013_64\include\QtWidgets\QMainWindow \
-		..\..\..\..\Qt\5.7\msvc2013_64\include\QtWidgets\qmainwindow.h \
-		..\..\..\..\Qt\5.7\msvc2013_64\include\QtWidgets\qwidget.h \
-		..\..\..\..\Qt\5.7\msvc2013_64\include\QtGui\qwindowdefs.h \
+	-$(DEL_FILE) release\moc_mainwindow.cpp release\moc_mythread.cpp release\moc_myrobot.cpp
+release\moc_mainwindow.cpp: ..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QMutex \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qmutex.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qglobal.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qconfig.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qfeatures.h \
@@ -169,9 +179,12 @@ release\moc_mainwindow.cpp: ..\..\..\..\Qt\5.7\msvc2013_64\include\QtWidgets\QMa
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qatomic_cxx11.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qatomic_msvc.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qglobalstatic.h \
-		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qmutex.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qnumeric.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qversiontagging.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtWidgets\QMainWindow \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtWidgets\qmainwindow.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtWidgets\qwidget.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtGui\qwindowdefs.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qobjectdefs.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qnamespace.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qobjectdefs_impl.h \
@@ -246,6 +259,9 @@ release\moc_mainwindow.cpp: ..\..\..\..\Qt\5.7\msvc2013_64\include\QtWidgets\QMa
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtGui\qtouchdevice.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtWidgets\qtabwidget.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtGui\qicon.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QList \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QStringList \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QObject \
 		dcmotor.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtSerialPort\QSerialPort \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtSerialPort\qserialport.h \
@@ -273,8 +289,6 @@ release\moc_mainwindow.cpp: ..\..\..\..\Qt\5.7\msvc2013_64\include\QtWidgets\QMa
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qfileinfo.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qdiriterator.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qfileselector.h \
-		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QObject \
-		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QStringList \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qfilesystemwatcher.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qlockfile.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qloggingcategory.h \
@@ -381,9 +395,376 @@ release\moc_mainwindow.cpp: ..\..\..\..\Qt\5.7\msvc2013_64\include\QtWidgets\QMa
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\qtconcurrentstoredfunctioncall.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\qtconcurrentversion.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QDebug \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QThread \
+		..\..\..\..\opencv\build\include\opencv2\opencv.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\cvdef.h \
+		..\..\..\..\opencv\build\include\opencv2\hal\defs.h \
+		..\..\..\..\opencv\build\include\opencv2\core\version.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\base.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\cvstd.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\ptr.inl.hpp \
+		..\..\..\..\opencv\build\include\opencv2\hal.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\sse_utils.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\traits.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\matx.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\types.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\mat.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\bufferpool.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\mat.inl.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\persistence.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\operations.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\cvstd.inl.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\utility.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\core_c.h \
+		..\..\..\..\opencv\build\include\opencv2\core\types_c.h \
+		..\..\..\..\opencv\build\include\opencv2\core\optim.hpp \
+		..\..\..\..\opencv\build\include\opencv2\imgproc.hpp \
+		..\..\..\..\opencv\build\include\opencv2\imgproc\imgproc_c.h \
+		..\..\..\..\opencv\build\include\opencv2\imgproc\types_c.h \
+		..\..\..\..\opencv\build\include\opencv2\photo.hpp \
+		..\..\..\..\opencv\build\include\opencv2\photo\photo_c.h \
+		..\..\..\..\opencv\build\include\opencv2\video.hpp \
+		..\..\..\..\opencv\build\include\opencv2\video\tracking.hpp \
+		..\..\..\..\opencv\build\include\opencv2\video\background_segm.hpp \
+		..\..\..\..\opencv\build\include\opencv2\video\tracking_c.h \
+		..\..\..\..\opencv\build\include\opencv2\features2d.hpp \
+		..\..\..\..\opencv\build\include\opencv2\flann\miniflann.hpp \
+		..\..\..\..\opencv\build\include\opencv2\flann\defines.h \
+		..\..\..\..\opencv\build\include\opencv2\flann\config.h \
+		..\..\..\..\opencv\build\include\opencv2\objdetect.hpp \
+		..\..\..\..\opencv\build\include\opencv2\objdetect\detection_based_tracker.hpp \
+		..\..\..\..\opencv\build\include\opencv2\objdetect\objdetect_c.h \
+		..\..\..\..\opencv\build\include\opencv2\calib3d.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\affine.hpp \
+		..\..\..\..\opencv\build\include\opencv2\calib3d\calib3d_c.h \
+		..\..\..\..\opencv\build\include\opencv2\imgcodecs.hpp \
+		..\..\..\..\opencv\build\include\opencv2\videoio.hpp \
+		..\..\..\..\opencv\build\include\opencv2\highgui.hpp \
+		..\..\..\..\opencv\build\include\opencv2\highgui\highgui_c.h \
+		..\..\..\..\opencv\build\include\opencv2\imgcodecs\imgcodecs_c.h \
+		..\..\..\..\opencv\build\include\opencv2\videoio\videoio_c.h \
+		..\..\..\..\opencv\build\include\opencv2\ml.hpp \
+		mythread.h \
+		myrobot.h \
 		mainwindow.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\bin\moc.exe
-	C:\Qt\5.7\msvc2013_64\bin\moc.exe $(DEFINES) -D_MSC_VER=1800 -D_WIN32 -D_WIN64 -IC:/Qt/5.7/msvc2013_64/mkspecs/win32-msvc2013 -IC:/Users/Arthur/Documents/Motor -IC:/Qt/5.7/msvc2013_64/include -IC:/Qt/5.7/msvc2013_64/include/QtWidgets -IC:/Qt/5.7/msvc2013_64/include/QtGui -IC:/Qt/5.7/msvc2013_64/include/QtANGLE -IC:/Qt/5.7/msvc2013_64/include/QtSerialPort -IC:/Qt/5.7/msvc2013_64/include/QtCore mainwindow.h -o release\moc_mainwindow.cpp
+	C:\Qt\5.7\msvc2013_64\bin\moc.exe $(DEFINES) -D_MSC_VER=1800 -D_WIN32 -D_WIN64 -IC:/Qt/5.7/msvc2013_64/mkspecs/win32-msvc2013 -IC:/Users/Arthur/Documents/Motor -IC:/opencv/build/include -IC:/Qt/5.7/msvc2013_64/include -IC:/Qt/5.7/msvc2013_64/include/QtWidgets -IC:/Qt/5.7/msvc2013_64/include/QtGui -IC:/Qt/5.7/msvc2013_64/include/QtANGLE -IC:/Qt/5.7/msvc2013_64/include/QtSerialPort -IC:/Qt/5.7/msvc2013_64/include/QtCore mainwindow.h -o release\moc_mainwindow.cpp
+
+release\moc_mythread.cpp: ..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QThread \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qthread.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qobject.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qobjectdefs.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qnamespace.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qglobal.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qconfig.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qfeatures.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qsystemdetection.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qprocessordetection.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qcompilerdetection.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qtypeinfo.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qtypetraits.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qisenum.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qsysinfo.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qlogging.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qflags.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qatomic.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qbasicatomic.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qatomic_bootstrap.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qgenericatomic.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qatomic_cxx11.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qatomic_msvc.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qglobalstatic.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qmutex.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qnumeric.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qversiontagging.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qobjectdefs_impl.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qstring.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qchar.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qbytearray.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qrefcount.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qarraydata.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qstringbuilder.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qlist.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qalgorithms.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qiterator.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qhashfunctions.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qpair.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qbytearraylist.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qstringlist.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qregexp.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qstringmatcher.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qcoreevent.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qscopedpointer.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qmetatype.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qvarlengtharray.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qcontainerfwd.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qobject_impl.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QMutex \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QStringList \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QObject \
+		mythread.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\bin\moc.exe
+	C:\Qt\5.7\msvc2013_64\bin\moc.exe $(DEFINES) -D_MSC_VER=1800 -D_WIN32 -D_WIN64 -IC:/Qt/5.7/msvc2013_64/mkspecs/win32-msvc2013 -IC:/Users/Arthur/Documents/Motor -IC:/opencv/build/include -IC:/Qt/5.7/msvc2013_64/include -IC:/Qt/5.7/msvc2013_64/include/QtWidgets -IC:/Qt/5.7/msvc2013_64/include/QtGui -IC:/Qt/5.7/msvc2013_64/include/QtANGLE -IC:/Qt/5.7/msvc2013_64/include/QtSerialPort -IC:/Qt/5.7/msvc2013_64/include/QtCore mythread.h -o release\moc_mythread.cpp
+
+release\moc_myrobot.cpp: dcmotor.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtSerialPort\QSerialPort \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtSerialPort\qserialport.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qiodevice.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qglobal.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qconfig.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qfeatures.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qsystemdetection.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qprocessordetection.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qcompilerdetection.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qtypeinfo.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qtypetraits.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qisenum.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qsysinfo.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qlogging.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qflags.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qatomic.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qbasicatomic.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qatomic_bootstrap.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qgenericatomic.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qatomic_cxx11.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qatomic_msvc.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qglobalstatic.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qmutex.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qnumeric.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qversiontagging.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qobject.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qobjectdefs.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qnamespace.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qobjectdefs_impl.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qstring.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qchar.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qbytearray.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qrefcount.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qarraydata.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qstringbuilder.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qlist.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qalgorithms.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qiterator.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qhashfunctions.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qpair.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qbytearraylist.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qstringlist.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qregexp.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qstringmatcher.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qcoreevent.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qscopedpointer.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qmetatype.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qvarlengtharray.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qcontainerfwd.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qobject_impl.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtSerialPort\qserialportglobal.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QDataStream \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qdatastream.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QString \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\QtConcurrent \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\QtConcurrentDepends \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QtCore \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QtCoreDepends \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qabstractanimation.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qanimationgroup.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qparallelanimationgroup.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qpauseanimation.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qpropertyanimation.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qvariantanimation.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qeasingcurve.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qvector.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qpoint.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qvariant.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qmap.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qdebug.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qhash.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qtextstream.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qlocale.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qshareddata.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qset.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qcontiguouscache.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qsharedpointer.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qsharedpointer_impl.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qsequentialanimationgroup.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qtextcodec.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qendian.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qlibraryinfo.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qdatetime.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qbuffer.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qdir.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qfileinfo.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qfile.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qfiledevice.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qdiriterator.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qfileselector.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QObject \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QStringList \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qfilesystemwatcher.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qlockfile.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qloggingcategory.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qprocess.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qresource.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qsavefile.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qsettings.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qstandardpaths.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qstorageinfo.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qtemporarydir.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QScopedPointer \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qtemporaryfile.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qurl.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qurlquery.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qabstractitemmodel.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qabstractproxymodel.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qidentityproxymodel.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qitemselectionmodel.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qsortfilterproxymodel.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qstringlistmodel.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qjsonarray.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qjsonvalue.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qjsondocument.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qjsonobject.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qabstracteventdispatcher.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qeventloop.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qabstractnativeeventfilter.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qbasictimer.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qcoreapplication.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qmath.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qmetaobject.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qmimedata.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qobjectcleanuphandler.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qpointer.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qsharedmemory.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qsignalmapper.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qsocketnotifier.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qsystemsemaphore.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qtimer.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qtranslator.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qwineventnotifier.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qmimedatabase.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qmimetype.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qfactoryinterface.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qlibrary.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qplugin.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qpluginloader.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\quuid.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qabstractstate.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qabstracttransition.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qeventtransition.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qfinalstate.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qhistorystate.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qsignaltransition.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qstate.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qstatemachine.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qexception.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qfuture.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qfutureinterface.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qrunnable.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qresultstore.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qfuturesynchronizer.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qfuturewatcher.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qreadwritelock.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qsemaphore.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qthread.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qthreadpool.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qthreadstorage.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qwaitcondition.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qarraydataops.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qarraydatapointer.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qbitarray.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qbytearraymatcher.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qcache.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qcollator.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qcommandlineoption.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qcommandlineparser.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qcryptographichash.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qelapsedtimer.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qline.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qlinkedlist.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qmargins.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qmessageauthenticationcode.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qqueue.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qrect.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qsize.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qregularexpression.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qscopedvaluerollback.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qstack.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qtextboundaryfinder.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qtimeline.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qtimezone.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qversionnumber.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qxmlstream.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qtcoreversion.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\qtconcurrentcompilertest.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\qtconcurrent_global.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\qtconcurrentexception.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\qtconcurrentfilter.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\qtconcurrentfilterkernel.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\qtconcurrentiteratekernel.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\qtconcurrentmedian.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\qtconcurrentthreadengine.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\qtconcurrentmapkernel.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\qtconcurrentreducekernel.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\qtconcurrentfunctionwrappers.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\qtconcurrentmap.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\qtconcurrentrun.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\qtconcurrentrunbase.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\qtconcurrentstoredfunctioncall.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\qtconcurrentversion.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QDebug \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QThread \
+		..\..\..\..\opencv\build\include\opencv2\opencv.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\cvdef.h \
+		..\..\..\..\opencv\build\include\opencv2\hal\defs.h \
+		..\..\..\..\opencv\build\include\opencv2\core\version.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\base.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\cvstd.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\ptr.inl.hpp \
+		..\..\..\..\opencv\build\include\opencv2\hal.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\sse_utils.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\traits.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\matx.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\types.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\mat.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\bufferpool.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\mat.inl.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\persistence.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\operations.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\cvstd.inl.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\utility.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\core_c.h \
+		..\..\..\..\opencv\build\include\opencv2\core\types_c.h \
+		..\..\..\..\opencv\build\include\opencv2\core\optim.hpp \
+		..\..\..\..\opencv\build\include\opencv2\imgproc.hpp \
+		..\..\..\..\opencv\build\include\opencv2\imgproc\imgproc_c.h \
+		..\..\..\..\opencv\build\include\opencv2\imgproc\types_c.h \
+		..\..\..\..\opencv\build\include\opencv2\photo.hpp \
+		..\..\..\..\opencv\build\include\opencv2\photo\photo_c.h \
+		..\..\..\..\opencv\build\include\opencv2\video.hpp \
+		..\..\..\..\opencv\build\include\opencv2\video\tracking.hpp \
+		..\..\..\..\opencv\build\include\opencv2\video\background_segm.hpp \
+		..\..\..\..\opencv\build\include\opencv2\video\tracking_c.h \
+		..\..\..\..\opencv\build\include\opencv2\features2d.hpp \
+		..\..\..\..\opencv\build\include\opencv2\flann\miniflann.hpp \
+		..\..\..\..\opencv\build\include\opencv2\flann\defines.h \
+		..\..\..\..\opencv\build\include\opencv2\flann\config.h \
+		..\..\..\..\opencv\build\include\opencv2\objdetect.hpp \
+		..\..\..\..\opencv\build\include\opencv2\objdetect\detection_based_tracker.hpp \
+		..\..\..\..\opencv\build\include\opencv2\objdetect\objdetect_c.h \
+		..\..\..\..\opencv\build\include\opencv2\calib3d.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\affine.hpp \
+		..\..\..\..\opencv\build\include\opencv2\calib3d\calib3d_c.h \
+		..\..\..\..\opencv\build\include\opencv2\imgcodecs.hpp \
+		..\..\..\..\opencv\build\include\opencv2\videoio.hpp \
+		..\..\..\..\opencv\build\include\opencv2\highgui.hpp \
+		..\..\..\..\opencv\build\include\opencv2\highgui\highgui_c.h \
+		..\..\..\..\opencv\build\include\opencv2\imgcodecs\imgcodecs_c.h \
+		..\..\..\..\opencv\build\include\opencv2\videoio\videoio_c.h \
+		..\..\..\..\opencv\build\include\opencv2\ml.hpp \
+		myrobot.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\bin\moc.exe
+	C:\Qt\5.7\msvc2013_64\bin\moc.exe $(DEFINES) -D_MSC_VER=1800 -D_WIN32 -D_WIN64 -IC:/Qt/5.7/msvc2013_64/mkspecs/win32-msvc2013 -IC:/Users/Arthur/Documents/Motor -IC:/opencv/build/include -IC:/Qt/5.7/msvc2013_64/include -IC:/Qt/5.7/msvc2013_64/include/QtWidgets -IC:/Qt/5.7/msvc2013_64/include/QtGui -IC:/Qt/5.7/msvc2013_64/include/QtANGLE -IC:/Qt/5.7/msvc2013_64/include/QtSerialPort -IC:/Qt/5.7/msvc2013_64/include/QtCore myrobot.h -o release\moc_myrobot.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -407,10 +788,8 @@ compiler_clean: compiler_moc_header_clean compiler_uic_clean
 ####### Compile
 
 release\main.obj: main.cpp mainwindow.h \
-		..\..\..\..\Qt\5.7\msvc2013_64\include\QtWidgets\QMainWindow \
-		..\..\..\..\Qt\5.7\msvc2013_64\include\QtWidgets\qmainwindow.h \
-		..\..\..\..\Qt\5.7\msvc2013_64\include\QtWidgets\qwidget.h \
-		..\..\..\..\Qt\5.7\msvc2013_64\include\QtGui\qwindowdefs.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QMutex \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qmutex.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qglobal.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qconfig.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qfeatures.h \
@@ -430,9 +809,12 @@ release\main.obj: main.cpp mainwindow.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qatomic_cxx11.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qatomic_msvc.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qglobalstatic.h \
-		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qmutex.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qnumeric.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qversiontagging.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtWidgets\QMainWindow \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtWidgets\qmainwindow.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtWidgets\qwidget.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtGui\qwindowdefs.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qobjectdefs.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qnamespace.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qobjectdefs_impl.h \
@@ -507,6 +889,9 @@ release\main.obj: main.cpp mainwindow.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtGui\qtouchdevice.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtWidgets\qtabwidget.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtGui\qicon.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QList \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QStringList \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QObject \
 		dcmotor.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtSerialPort\QSerialPort \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtSerialPort\qserialport.h \
@@ -534,8 +919,6 @@ release\main.obj: main.cpp mainwindow.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qfileinfo.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qdiriterator.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qfileselector.h \
-		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QObject \
-		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QStringList \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qfilesystemwatcher.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qlockfile.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qloggingcategory.h \
@@ -642,6 +1025,58 @@ release\main.obj: main.cpp mainwindow.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\qtconcurrentstoredfunctioncall.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\qtconcurrentversion.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QDebug \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QThread \
+		..\..\..\..\opencv\build\include\opencv2\opencv.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\cvdef.h \
+		..\..\..\..\opencv\build\include\opencv2\hal\defs.h \
+		..\..\..\..\opencv\build\include\opencv2\core\version.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\base.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\cvstd.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\ptr.inl.hpp \
+		..\..\..\..\opencv\build\include\opencv2\hal.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\sse_utils.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\traits.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\matx.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\types.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\mat.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\bufferpool.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\mat.inl.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\persistence.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\operations.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\cvstd.inl.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\utility.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\core_c.h \
+		..\..\..\..\opencv\build\include\opencv2\core\types_c.h \
+		..\..\..\..\opencv\build\include\opencv2\core\optim.hpp \
+		..\..\..\..\opencv\build\include\opencv2\imgproc.hpp \
+		..\..\..\..\opencv\build\include\opencv2\imgproc\imgproc_c.h \
+		..\..\..\..\opencv\build\include\opencv2\imgproc\types_c.h \
+		..\..\..\..\opencv\build\include\opencv2\photo.hpp \
+		..\..\..\..\opencv\build\include\opencv2\photo\photo_c.h \
+		..\..\..\..\opencv\build\include\opencv2\video.hpp \
+		..\..\..\..\opencv\build\include\opencv2\video\tracking.hpp \
+		..\..\..\..\opencv\build\include\opencv2\video\background_segm.hpp \
+		..\..\..\..\opencv\build\include\opencv2\video\tracking_c.h \
+		..\..\..\..\opencv\build\include\opencv2\features2d.hpp \
+		..\..\..\..\opencv\build\include\opencv2\flann\miniflann.hpp \
+		..\..\..\..\opencv\build\include\opencv2\flann\defines.h \
+		..\..\..\..\opencv\build\include\opencv2\flann\config.h \
+		..\..\..\..\opencv\build\include\opencv2\objdetect.hpp \
+		..\..\..\..\opencv\build\include\opencv2\objdetect\detection_based_tracker.hpp \
+		..\..\..\..\opencv\build\include\opencv2\objdetect\objdetect_c.h \
+		..\..\..\..\opencv\build\include\opencv2\calib3d.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\affine.hpp \
+		..\..\..\..\opencv\build\include\opencv2\calib3d\calib3d_c.h \
+		..\..\..\..\opencv\build\include\opencv2\imgcodecs.hpp \
+		..\..\..\..\opencv\build\include\opencv2\videoio.hpp \
+		..\..\..\..\opencv\build\include\opencv2\highgui.hpp \
+		..\..\..\..\opencv\build\include\opencv2\highgui\highgui_c.h \
+		..\..\..\..\opencv\build\include\opencv2\imgcodecs\imgcodecs_c.h \
+		..\..\..\..\opencv\build\include\opencv2\videoio\videoio_c.h \
+		..\..\..\..\opencv\build\include\opencv2\ml.hpp \
+		mythread.h \
+		myrobot.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtWidgets\QApplication \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtWidgets\qapplication.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtWidgets\qdesktopwidget.h \
@@ -649,10 +1084,8 @@ release\main.obj: main.cpp mainwindow.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtGui\qinputmethod.h
 
 release\mainwindow.obj: mainwindow.cpp mainwindow.h \
-		..\..\..\..\Qt\5.7\msvc2013_64\include\QtWidgets\QMainWindow \
-		..\..\..\..\Qt\5.7\msvc2013_64\include\QtWidgets\qmainwindow.h \
-		..\..\..\..\Qt\5.7\msvc2013_64\include\QtWidgets\qwidget.h \
-		..\..\..\..\Qt\5.7\msvc2013_64\include\QtGui\qwindowdefs.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QMutex \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qmutex.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qglobal.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qconfig.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qfeatures.h \
@@ -672,9 +1105,12 @@ release\mainwindow.obj: mainwindow.cpp mainwindow.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qatomic_cxx11.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qatomic_msvc.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qglobalstatic.h \
-		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qmutex.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qnumeric.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qversiontagging.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtWidgets\QMainWindow \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtWidgets\qmainwindow.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtWidgets\qwidget.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtGui\qwindowdefs.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qobjectdefs.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qnamespace.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qobjectdefs_impl.h \
@@ -749,6 +1185,9 @@ release\mainwindow.obj: mainwindow.cpp mainwindow.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtGui\qtouchdevice.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtWidgets\qtabwidget.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtGui\qicon.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QList \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QStringList \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QObject \
 		dcmotor.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtSerialPort\QSerialPort \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtSerialPort\qserialport.h \
@@ -776,8 +1215,6 @@ release\mainwindow.obj: mainwindow.cpp mainwindow.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qfileinfo.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qdiriterator.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qfileselector.h \
-		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QObject \
-		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QStringList \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qfilesystemwatcher.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qlockfile.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qloggingcategory.h \
@@ -884,6 +1321,58 @@ release\mainwindow.obj: mainwindow.cpp mainwindow.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\qtconcurrentstoredfunctioncall.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\qtconcurrentversion.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QDebug \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QThread \
+		..\..\..\..\opencv\build\include\opencv2\opencv.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\cvdef.h \
+		..\..\..\..\opencv\build\include\opencv2\hal\defs.h \
+		..\..\..\..\opencv\build\include\opencv2\core\version.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\base.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\cvstd.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\ptr.inl.hpp \
+		..\..\..\..\opencv\build\include\opencv2\hal.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\sse_utils.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\traits.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\matx.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\types.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\mat.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\bufferpool.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\mat.inl.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\persistence.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\operations.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\cvstd.inl.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\utility.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\core_c.h \
+		..\..\..\..\opencv\build\include\opencv2\core\types_c.h \
+		..\..\..\..\opencv\build\include\opencv2\core\optim.hpp \
+		..\..\..\..\opencv\build\include\opencv2\imgproc.hpp \
+		..\..\..\..\opencv\build\include\opencv2\imgproc\imgproc_c.h \
+		..\..\..\..\opencv\build\include\opencv2\imgproc\types_c.h \
+		..\..\..\..\opencv\build\include\opencv2\photo.hpp \
+		..\..\..\..\opencv\build\include\opencv2\photo\photo_c.h \
+		..\..\..\..\opencv\build\include\opencv2\video.hpp \
+		..\..\..\..\opencv\build\include\opencv2\video\tracking.hpp \
+		..\..\..\..\opencv\build\include\opencv2\video\background_segm.hpp \
+		..\..\..\..\opencv\build\include\opencv2\video\tracking_c.h \
+		..\..\..\..\opencv\build\include\opencv2\features2d.hpp \
+		..\..\..\..\opencv\build\include\opencv2\flann\miniflann.hpp \
+		..\..\..\..\opencv\build\include\opencv2\flann\defines.h \
+		..\..\..\..\opencv\build\include\opencv2\flann\config.h \
+		..\..\..\..\opencv\build\include\opencv2\objdetect.hpp \
+		..\..\..\..\opencv\build\include\opencv2\objdetect\detection_based_tracker.hpp \
+		..\..\..\..\opencv\build\include\opencv2\objdetect\objdetect_c.h \
+		..\..\..\..\opencv\build\include\opencv2\calib3d.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\affine.hpp \
+		..\..\..\..\opencv\build\include\opencv2\calib3d\calib3d_c.h \
+		..\..\..\..\opencv\build\include\opencv2\imgcodecs.hpp \
+		..\..\..\..\opencv\build\include\opencv2\videoio.hpp \
+		..\..\..\..\opencv\build\include\opencv2\highgui.hpp \
+		..\..\..\..\opencv\build\include\opencv2\highgui\highgui_c.h \
+		..\..\..\..\opencv\build\include\opencv2\imgcodecs\imgcodecs_c.h \
+		..\..\..\..\opencv\build\include\opencv2\videoio\videoio_c.h \
+		..\..\..\..\opencv\build\include\opencv2\ml.hpp \
+		mythread.h \
+		myrobot.h \
 		ui_mainwindow.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QVariant \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtWidgets\QAction \
@@ -1147,9 +1636,389 @@ release\dcmotor.obj: dcmotor.cpp dcmotor.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\qtconcurrentrunbase.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\qtconcurrentstoredfunctioncall.h \
 		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\qtconcurrentversion.h \
-		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QDebug
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QDebug \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QThread \
+		..\..\..\..\opencv\build\include\opencv2\opencv.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\cvdef.h \
+		..\..\..\..\opencv\build\include\opencv2\hal\defs.h \
+		..\..\..\..\opencv\build\include\opencv2\core\version.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\base.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\cvstd.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\ptr.inl.hpp \
+		..\..\..\..\opencv\build\include\opencv2\hal.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\sse_utils.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\traits.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\matx.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\types.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\mat.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\bufferpool.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\mat.inl.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\persistence.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\operations.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\cvstd.inl.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\utility.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\core_c.h \
+		..\..\..\..\opencv\build\include\opencv2\core\types_c.h \
+		..\..\..\..\opencv\build\include\opencv2\core\optim.hpp \
+		..\..\..\..\opencv\build\include\opencv2\imgproc.hpp \
+		..\..\..\..\opencv\build\include\opencv2\imgproc\imgproc_c.h \
+		..\..\..\..\opencv\build\include\opencv2\imgproc\types_c.h \
+		..\..\..\..\opencv\build\include\opencv2\photo.hpp \
+		..\..\..\..\opencv\build\include\opencv2\photo\photo_c.h \
+		..\..\..\..\opencv\build\include\opencv2\video.hpp \
+		..\..\..\..\opencv\build\include\opencv2\video\tracking.hpp \
+		..\..\..\..\opencv\build\include\opencv2\video\background_segm.hpp \
+		..\..\..\..\opencv\build\include\opencv2\video\tracking_c.h \
+		..\..\..\..\opencv\build\include\opencv2\features2d.hpp \
+		..\..\..\..\opencv\build\include\opencv2\flann\miniflann.hpp \
+		..\..\..\..\opencv\build\include\opencv2\flann\defines.h \
+		..\..\..\..\opencv\build\include\opencv2\flann\config.h \
+		..\..\..\..\opencv\build\include\opencv2\objdetect.hpp \
+		..\..\..\..\opencv\build\include\opencv2\objdetect\detection_based_tracker.hpp \
+		..\..\..\..\opencv\build\include\opencv2\objdetect\objdetect_c.h \
+		..\..\..\..\opencv\build\include\opencv2\calib3d.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\affine.hpp \
+		..\..\..\..\opencv\build\include\opencv2\calib3d\calib3d_c.h \
+		..\..\..\..\opencv\build\include\opencv2\imgcodecs.hpp \
+		..\..\..\..\opencv\build\include\opencv2\videoio.hpp \
+		..\..\..\..\opencv\build\include\opencv2\highgui.hpp \
+		..\..\..\..\opencv\build\include\opencv2\highgui\highgui_c.h \
+		..\..\..\..\opencv\build\include\opencv2\imgcodecs\imgcodecs_c.h \
+		..\..\..\..\opencv\build\include\opencv2\videoio\videoio_c.h \
+		..\..\..\..\opencv\build\include\opencv2\ml.hpp
+
+release\mythread.obj: mythread.cpp mythread.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QThread \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qthread.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qobject.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qobjectdefs.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qnamespace.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qglobal.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qconfig.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qfeatures.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qsystemdetection.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qprocessordetection.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qcompilerdetection.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qtypeinfo.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qtypetraits.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qisenum.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qsysinfo.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qlogging.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qflags.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qatomic.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qbasicatomic.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qatomic_bootstrap.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qgenericatomic.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qatomic_cxx11.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qatomic_msvc.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qglobalstatic.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qmutex.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qnumeric.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qversiontagging.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qobjectdefs_impl.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qstring.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qchar.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qbytearray.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qrefcount.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qarraydata.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qstringbuilder.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qlist.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qalgorithms.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qiterator.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qhashfunctions.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qpair.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qbytearraylist.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qstringlist.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qregexp.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qstringmatcher.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qcoreevent.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qscopedpointer.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qmetatype.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qvarlengtharray.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qcontainerfwd.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qobject_impl.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QMutex \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QStringList \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QObject \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QDebug \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qdebug.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qhash.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qmap.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qtextstream.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qiodevice.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qlocale.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qvariant.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qshareddata.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qvector.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qpoint.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qset.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qcontiguouscache.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qsharedpointer.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qsharedpointer_impl.h
+
+release\myrobot.obj: myrobot.cpp myrobot.h \
+		dcmotor.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtSerialPort\QSerialPort \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtSerialPort\qserialport.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qiodevice.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qglobal.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qconfig.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qfeatures.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qsystemdetection.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qprocessordetection.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qcompilerdetection.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qtypeinfo.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qtypetraits.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qisenum.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qsysinfo.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qlogging.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qflags.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qatomic.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qbasicatomic.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qatomic_bootstrap.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qgenericatomic.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qatomic_cxx11.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qatomic_msvc.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qglobalstatic.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qmutex.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qnumeric.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qversiontagging.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qobject.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qobjectdefs.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qnamespace.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qobjectdefs_impl.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qstring.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qchar.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qbytearray.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qrefcount.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qarraydata.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qstringbuilder.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qlist.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qalgorithms.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qiterator.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qhashfunctions.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qpair.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qbytearraylist.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qstringlist.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qregexp.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qstringmatcher.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qcoreevent.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qscopedpointer.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qmetatype.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qvarlengtharray.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qcontainerfwd.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qobject_impl.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtSerialPort\qserialportglobal.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QDataStream \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qdatastream.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QString \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\QtConcurrent \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\QtConcurrentDepends \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QtCore \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QtCoreDepends \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qabstractanimation.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qanimationgroup.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qparallelanimationgroup.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qpauseanimation.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qpropertyanimation.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qvariantanimation.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qeasingcurve.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qvector.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qpoint.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qvariant.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qmap.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qdebug.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qhash.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qtextstream.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qlocale.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qshareddata.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qset.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qcontiguouscache.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qsharedpointer.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qsharedpointer_impl.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qsequentialanimationgroup.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qtextcodec.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qendian.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qlibraryinfo.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qdatetime.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qbuffer.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qdir.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qfileinfo.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qfile.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qfiledevice.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qdiriterator.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qfileselector.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QObject \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QStringList \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qfilesystemwatcher.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qlockfile.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qloggingcategory.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qprocess.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qresource.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qsavefile.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qsettings.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qstandardpaths.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qstorageinfo.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qtemporarydir.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QScopedPointer \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qtemporaryfile.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qurl.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qurlquery.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qabstractitemmodel.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qabstractproxymodel.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qidentityproxymodel.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qitemselectionmodel.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qsortfilterproxymodel.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qstringlistmodel.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qjsonarray.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qjsonvalue.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qjsondocument.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qjsonobject.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qabstracteventdispatcher.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qeventloop.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qabstractnativeeventfilter.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qbasictimer.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qcoreapplication.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qmath.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qmetaobject.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qmimedata.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qobjectcleanuphandler.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qpointer.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qsharedmemory.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qsignalmapper.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qsocketnotifier.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qsystemsemaphore.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qtimer.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qtranslator.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qwineventnotifier.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qmimedatabase.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qmimetype.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qfactoryinterface.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qlibrary.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qplugin.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qpluginloader.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\quuid.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qabstractstate.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qabstracttransition.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qeventtransition.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qfinalstate.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qhistorystate.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qsignaltransition.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qstate.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qstatemachine.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qexception.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qfuture.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qfutureinterface.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qrunnable.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qresultstore.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qfuturesynchronizer.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qfuturewatcher.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qreadwritelock.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qsemaphore.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qthread.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qthreadpool.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qthreadstorage.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qwaitcondition.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qarraydataops.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qarraydatapointer.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qbitarray.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qbytearraymatcher.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qcache.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qcollator.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qcommandlineoption.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qcommandlineparser.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qcryptographichash.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qelapsedtimer.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qline.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qlinkedlist.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qmargins.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qmessageauthenticationcode.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qqueue.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qrect.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qsize.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qregularexpression.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qscopedvaluerollback.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qstack.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qtextboundaryfinder.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qtimeline.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qtimezone.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qversionnumber.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qxmlstream.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\qtcoreversion.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\qtconcurrentcompilertest.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\qtconcurrent_global.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\qtconcurrentexception.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\qtconcurrentfilter.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\qtconcurrentfilterkernel.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\qtconcurrentiteratekernel.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\qtconcurrentmedian.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\qtconcurrentthreadengine.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\qtconcurrentmapkernel.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\qtconcurrentreducekernel.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\qtconcurrentfunctionwrappers.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\qtconcurrentmap.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\qtconcurrentrun.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\qtconcurrentrunbase.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\qtconcurrentstoredfunctioncall.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtConcurrent\qtconcurrentversion.h \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QDebug \
+		..\..\..\..\Qt\5.7\msvc2013_64\include\QtCore\QThread \
+		..\..\..\..\opencv\build\include\opencv2\opencv.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\cvdef.h \
+		..\..\..\..\opencv\build\include\opencv2\hal\defs.h \
+		..\..\..\..\opencv\build\include\opencv2\core\version.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\base.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\cvstd.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\ptr.inl.hpp \
+		..\..\..\..\opencv\build\include\opencv2\hal.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\sse_utils.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\traits.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\matx.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\types.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\mat.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\bufferpool.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\mat.inl.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\persistence.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\operations.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\cvstd.inl.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\utility.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\core_c.h \
+		..\..\..\..\opencv\build\include\opencv2\core\types_c.h \
+		..\..\..\..\opencv\build\include\opencv2\core\optim.hpp \
+		..\..\..\..\opencv\build\include\opencv2\imgproc.hpp \
+		..\..\..\..\opencv\build\include\opencv2\imgproc\imgproc_c.h \
+		..\..\..\..\opencv\build\include\opencv2\imgproc\types_c.h \
+		..\..\..\..\opencv\build\include\opencv2\photo.hpp \
+		..\..\..\..\opencv\build\include\opencv2\photo\photo_c.h \
+		..\..\..\..\opencv\build\include\opencv2\video.hpp \
+		..\..\..\..\opencv\build\include\opencv2\video\tracking.hpp \
+		..\..\..\..\opencv\build\include\opencv2\video\background_segm.hpp \
+		..\..\..\..\opencv\build\include\opencv2\video\tracking_c.h \
+		..\..\..\..\opencv\build\include\opencv2\features2d.hpp \
+		..\..\..\..\opencv\build\include\opencv2\flann\miniflann.hpp \
+		..\..\..\..\opencv\build\include\opencv2\flann\defines.h \
+		..\..\..\..\opencv\build\include\opencv2\flann\config.h \
+		..\..\..\..\opencv\build\include\opencv2\objdetect.hpp \
+		..\..\..\..\opencv\build\include\opencv2\objdetect\detection_based_tracker.hpp \
+		..\..\..\..\opencv\build\include\opencv2\objdetect\objdetect_c.h \
+		..\..\..\..\opencv\build\include\opencv2\calib3d.hpp \
+		..\..\..\..\opencv\build\include\opencv2\core\affine.hpp \
+		..\..\..\..\opencv\build\include\opencv2\calib3d\calib3d_c.h \
+		..\..\..\..\opencv\build\include\opencv2\imgcodecs.hpp \
+		..\..\..\..\opencv\build\include\opencv2\videoio.hpp \
+		..\..\..\..\opencv\build\include\opencv2\highgui.hpp \
+		..\..\..\..\opencv\build\include\opencv2\highgui\highgui_c.h \
+		..\..\..\..\opencv\build\include\opencv2\imgcodecs\imgcodecs_c.h \
+		..\..\..\..\opencv\build\include\opencv2\videoio\videoio_c.h \
+		..\..\..\..\opencv\build\include\opencv2\ml.hpp
 
 release\moc_mainwindow.obj: release\moc_mainwindow.cpp 
+
+release\moc_mythread.obj: release\moc_mythread.cpp 
+
+release\moc_myrobot.obj: release\moc_myrobot.cpp 
 
 ####### Install
 

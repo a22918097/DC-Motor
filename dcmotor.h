@@ -7,7 +7,9 @@
 #include <QString>
 #include <QtConcurrent/QtConcurrent>
 #include <QDebug>
+#include <QThread>
 #include <queue>
+#include "opencv2/opencv.hpp"
 enum command{
     OK = 0,
     NP = 1,
@@ -18,13 +20,13 @@ class dcmotor : public  QSerialPort
 public:
     dcmotor();
     void Open(const QString &comport, const int baudrate);
-    void test();
     void SetHome();
     void stop();
     void D(int rpm);
     void R(int rpm);
     void SetMaxVelocity(double v_rpm);
     void RotateRelativeDistancce(int value);
+    QString readreadread();
 
 
 private:

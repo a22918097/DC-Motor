@@ -63,6 +63,8 @@ public:
     QPushButton *pushButton_initial;
     QPushButton *pushButton_D;
     QPushButton *pushButton_R;
+    QPushButton *pushButton_read;
+    QPushButton *pushButton;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -90,7 +92,7 @@ public:
         doubleSpinBox_velocity->setObjectName(QStringLiteral("doubleSpinBox_velocity"));
         doubleSpinBox_velocity->setMinimum(-5000);
         doubleSpinBox_velocity->setMaximum(5000);
-        doubleSpinBox_velocity->setValue(200);
+        doubleSpinBox_velocity->setValue(500);
 
         verticalLayout->addWidget(doubleSpinBox_velocity);
 
@@ -101,7 +103,7 @@ public:
 
         doubleSpinBox_distance = new QDoubleSpinBox(groupBox_4);
         doubleSpinBox_distance->setObjectName(QStringLiteral("doubleSpinBox_distance"));
-        doubleSpinBox_distance->setValue(0.5);
+        doubleSpinBox_distance->setValue(2);
 
         verticalLayout->addWidget(doubleSpinBox_distance);
 
@@ -204,10 +206,20 @@ public:
         pushButton_R->setObjectName(QStringLiteral("pushButton_R"));
         pushButton_R->setGeometry(QRect(790, 0, 131, 131));
         pushButton_R->setFont(font);
+        pushButton_read = new QPushButton(centralWidget);
+        pushButton_read->setObjectName(QStringLiteral("pushButton_read"));
+        pushButton_read->setGeometry(QRect(680, 30, 91, 71));
+        QFont font3;
+        font3.setFamily(QStringLiteral("Algerian"));
+        font3.setPointSize(16);
+        pushButton_read->setFont(font3);
+        pushButton = new QPushButton(centralWidget);
+        pushButton->setObjectName(QStringLiteral("pushButton"));
+        pushButton->setGeometry(QRect(150, 240, 75, 23));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 1920, 21));
+        menuBar->setGeometry(QRect(0, 0, 1920, 20));
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
@@ -219,9 +231,9 @@ public:
         retranslateUi(MainWindow);
 
         comboBox_baudrate_right->setCurrentIndex(3);
-        comboBox_COMport_right->setCurrentIndex(11);
+        comboBox_COMport_right->setCurrentIndex(3);
         comboBox_baudrate_left->setCurrentIndex(3);
-        comboBox_COMport_left->setCurrentIndex(6);
+        comboBox_COMport_left->setCurrentIndex(2);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -304,6 +316,8 @@ public:
         pushButton_D->setShortcut(QApplication::translate("MainWindow", "Esc", 0));
         pushButton_R->setText(QApplication::translate("MainWindow", "R", 0));
         pushButton_R->setShortcut(QApplication::translate("MainWindow", "Esc", 0));
+        pushButton_read->setText(QApplication::translate("MainWindow", "Read", 0));
+        pushButton->setText(QApplication::translate("MainWindow", "Run", 0));
     } // retranslateUi
 
 };
