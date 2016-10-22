@@ -13,10 +13,6 @@ class Mythread: public QThread
 public:
     explicit Mythread(QObject *parent = 0);
     void run();
-
-
-
-
 signals:
     void checktest();
 };

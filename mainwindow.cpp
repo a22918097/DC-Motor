@@ -158,6 +158,7 @@ void MainWindow::on_pushButton_stop_clicked()
         myrobot->left_dcmotor->stop();
         ui->textBrowser->append(QString("Stop"));
         waitting=false;
+        commandbuffer.clear();
     }
     else
     {
@@ -198,12 +199,7 @@ void MainWindow::on_pushButton_front_clicked()
 
     if (myrobot->right_dcmotor->isOpen() && myrobot->left_dcmotor->isOpen())
     {
-
-        //GoForward(ui->doubleSpinBox_distance->value(),ui->doubleSpinBox_velocity->value());
-        command << QString::number(DIRECTION::front) << QString::number(ui->doubleSpinBox_velocity->value())
-                << QString::number(ui->doubleSpinBox_distance->value()) << QString::number(ui->doubleSpinBox_angle->value());
-        commandbuffer.append(command);
-        command.clear();
+        addintobuffer(DIRECTION::front,ui->doubleSpinBox_velocity->value(),ui->doubleSpinBox_distance->value(),ui->doubleSpinBox_angle->value());
     }
     else
     {
@@ -218,13 +214,8 @@ void MainWindow::on_pushButton_turn_left_clicked()
 {
     if (myrobot->right_dcmotor->isOpen() && myrobot->left_dcmotor->isOpen())
     {
-
-        //        TurnLeft(ui->doubleSpinBox_angle->value(),
-        //                 ui->doubleSpinBox_velocity->value());
-        command << QString::number(DIRECTION::leftleft) << QString::number(ui->doubleSpinBox_velocity->value())
-                << QString::number(ui->doubleSpinBox_distance->value()) << QString::number(ui->doubleSpinBox_angle->value());
-        commandbuffer.push_back(command);
-        command.clear();
+        addintobuffer(DIRECTION::leftleft,ui->doubleSpinBox_velocity->value(),
+                      ui->doubleSpinBox_distance->value(),ui->doubleSpinBox_angle->value());
 
     }
     else
@@ -239,11 +230,8 @@ void MainWindow::on_pushButton_back_clicked()
 {
     if (myrobot->right_dcmotor->isOpen() && myrobot->left_dcmotor->isOpen())
     {
-        command << QString::number(DIRECTION::back) << QString::number(ui->doubleSpinBox_velocity->value())
-                << QString::number(ui->doubleSpinBox_distance->value()) << QString::number(ui->doubleSpinBox_angle->value());
-        commandbuffer.push_back(command);
-        command.clear();
-        //GoBackward(ui->doubleSpinBox_distance->value(),ui->doubleSpinBox_velocity->value());
+        addintobuffer(DIRECTION::back,ui->doubleSpinBox_velocity->value(),
+                      ui->doubleSpinBox_distance->value(),ui->doubleSpinBox_angle->value());
     }
     else
     {
@@ -288,11 +276,8 @@ void MainWindow::on_pushButton_trun_right_clicked()
 {
     if (myrobot->right_dcmotor->isOpen() && myrobot->left_dcmotor->isOpen())
     {
-        //TurnRight(ui->doubleSpinBox_angle->value(),ui->doubleSpinBox_velocity->value());
-        command << QString::number(DIRECTION::rightright) << QString::number(ui->doubleSpinBox_velocity->value())
-                << QString::number(ui->doubleSpinBox_distance->value()) << QString::number(ui->doubleSpinBox_angle->value());
-        commandbuffer.push_back(command);
-        command.clear();
+        addintobuffer(DIRECTION::rightright,ui->doubleSpinBox_velocity->value(),
+                      ui->doubleSpinBox_distance->value(),ui->doubleSpinBox_angle->value());
     }
     else
     {
@@ -343,21 +328,22 @@ void MainWindow::on_pushButton_read_clicked()
 void MainWindow::checkbusy()
 {
     mymutex.lock();
-    if(myrobot->left_dcmotor->readreadread()=="p\r\n" && myrobot->right_dcmotor->readreadread()=="p\r\n"){
+    if(myrobot->left_dcmotor->readreadread()=="p\r\n" &&  myrobot->right_dcmotor->readreadread()=="p\r\n"){
 
         waitting=false;
         busy=false;
 
     }
     mymutex.unlock();
-        if (!waitting && !commandbuffer.isEmpty() )
-        {
-            QStringList templist = commandbuffer.at(0);
-            runbuffer(templist[0].toInt(),templist[1].toDouble(),templist[2].toDouble(),templist[3].toDouble());
-            commandbuffer.removeAt(0);
-            waitting=true;
-        }
+    if (!waitting && !commandbuffer.isEmpty() )
+    {
+        QStringList templist = commandbuffer.at(0);
+        runbuffer(templist[0].toInt(),templist[1].toDouble(),templist[2].toDouble(),templist[3].toDouble());
+        commandbuffer.removeAt(0);
+        waitting=true;
+    }
 }
+
 
 void MainWindow::docheck()
 {
@@ -398,50 +384,122 @@ void MainWindow::runbuffer(int direction, double velocity, double distance, doub
 
 void MainWindow::on_pushButton_clicked()
 {
-    //往前
-    command << QString::number(DIRECTION::front) << QString::number(ui->doubleSpinBox_velocity->value())
-            << QString::number(2) << QString::number(ui->doubleSpinBox_angle->value());
-    commandbuffer.append(command);
-    command.clear();
+    addintobuffer(DIRECTION::front,1000,2,0);
+    addintobuffer(DIRECTION::rightright,1000,0,45);
+    addintobuffer(DIRECTION::front,1000,1,0);
+    addintobuffer(DIRECTION::leftleft,1000,0,45);
+    addintobuffer(DIRECTION::front,1000,1,0);
+    addintobuffer(DIRECTION::leftleft,1000,0,45);
+    addintobuffer(DIRECTION::front,1000,2,0);
+    addintobuffer(DIRECTION::rightright,1000,0,45);
+    addintobuffer(DIRECTION::front,1000,1,0);
+}
 
-    //往右
-    command << QString::number(DIRECTION::rightright) << QString::number(ui->doubleSpinBox_velocity->value())
-            << QString::number(ui->doubleSpinBox_distance->value()) << QString::number(45);
-    commandbuffer.push_back(command);
-    command.clear();
+void MainWindow::on_pushButton_run_clicked()
+{
+    QString src= "6666666666666677777776666666666666666777755555556666666";
+    stringdivide(src);
+    runpath(ql);
+    //qDebug() << ql;
+}
+void MainWindow::stringdivide(QString s)
+{
+    int count=1;
+    for(int i=0;i< s.size()-1;i++){
+        if(s.at(i) == s.at(i+1))
+            count++;
+        else{
+            temp << QString(s.at(i)) << QString::number(count);
+            ql.append(temp);
+            count=1;
+            temp.clear();
+        }
+    }
+    temp << QString(s.at(s.size()-1)) << QString::number(count);
+    ql.append(temp);
+}
 
-    //往前
+void MainWindow::runpath(QList<QStringList> qsl)
+{
 
-    command << QString::number(DIRECTION::front) << QString::number(ui->doubleSpinBox_velocity->value())
-            << QString::number(1) << QString::number(ui->doubleSpinBox_angle->value());
-    commandbuffer.append(command);
-    command.clear();
+    int degree=0;
+    for(int i=0;i<qsl.size();i++)
+    {
+        int direction = qsl.at(i).at(0).toInt();
+        int count= qsl.at(i).at(1).toInt();
+        switch(direction){
+        case 5:
+            if(degree!=-45){
+                //左轉45-degree度 直走
+                degree=-45-degree;
 
+                addintobuffer(DIRECTION::leftleft,ui->doubleSpinBox_velocity->value()
+                              ,0,-degree);
+                addintobuffer(DIRECTION::front,ui->doubleSpinBox_velocity->value()
+                              ,0.1414*count,0);
+            }
+            else if(degree==-45)
+            {
+                addintobuffer(DIRECTION::front,ui->doubleSpinBox_velocity->value()
+                              ,0.1414*count,0);
+            }
+            degree=-45;
+            break;
+        case 6:
+            if(degree==0){
+                //直接直走
+                addintobuffer(DIRECTION::front,ui->doubleSpinBox_velocity->value()
+                              ,0.1*count,0);
+            }
 
+            else if(degree!=0){
+                //先轉-degree
+                degree=0-degree;
+                if(degree>0)
+                {
+                    addintobuffer(DIRECTION::rightright,ui->doubleSpinBox_velocity->value()
+                                  ,count*0.1,degree);
+                    addintobuffer(DIRECTION::front,ui->doubleSpinBox_velocity->value()
+                                  ,0.1*count,0);
+                }
 
-    //往左
+                else if(degree < 0){
+                    addintobuffer(DIRECTION::leftleft,ui->doubleSpinBox_velocity->value()
+                                  ,0,-degree);
+                    addintobuffer(DIRECTION::front,ui->doubleSpinBox_velocity->value()
+                                  ,0.1*count,0);
+                }
+            }
+            degree=0;
+            break;
+        case 7:
+            if(degree!=45){
+                //右轉45-degree 直走
+                degree=45-degree;
+                addintobuffer(DIRECTION::rightright,ui->doubleSpinBox_velocity->value()
+                              ,0,degree);
+                addintobuffer(DIRECTION::front,ui->doubleSpinBox_velocity->value()
+                              ,0.1414*count,0);
+            }
+            else if(degree==45){
+                //直接直走
+                addintobuffer(DIRECTION::front,ui->doubleSpinBox_velocity->value()
+                              ,0.1414*count,degree);
+            }
+            degree=45;
+            break;
+        default:
 
-    command << QString::number(DIRECTION::leftleft) << QString::number(ui->doubleSpinBox_velocity->value())
-            << QString::number(ui->doubleSpinBox_distance->value()) << QString::number(90);
-    commandbuffer.push_back(command);
-    command.clear();
+            break;
+        }
 
-    //往前
-    command << QString::number(DIRECTION::front) << QString::number(ui->doubleSpinBox_velocity->value())
-            << QString::number(1) << QString::number(ui->doubleSpinBox_angle->value());
-    commandbuffer.append(command);
-    command.clear();
+    }
+}
 
-
-    //往右
-    command << QString::number(DIRECTION::rightright) << QString::number(ui->doubleSpinBox_velocity->value())
-            << QString::number(ui->doubleSpinBox_distance->value()) << QString::number(45);
-    commandbuffer.push_back(command);
-    command.clear();
-
-    //往前
-    command << QString::number(DIRECTION::front) << QString::number(ui->doubleSpinBox_velocity->value())
-            << QString::number(2) << QString::number(ui->doubleSpinBox_angle->value());
+void MainWindow::addintobuffer(int DIRECTION, double velocity, double distance, double angle)
+{
+    command << QString::number(DIRECTION) << QString::number(velocity)
+            << QString::number(distance) << QString::number(angle);
     commandbuffer.append(command);
     command.clear();
 }

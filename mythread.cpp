@@ -8,7 +8,6 @@ Mythread::Mythread(QObject *parent)
 void Mythread::run()
 {
     while(1){
-//        qDebug() << "run";
         emit checktest();
         msleep(500);
     }
@@ -24,19 +23,3 @@ void Mythread::run()
     //    }
 }
 
-
-//bool Mythread::checkbusy()
-//{
-//////    mymutex.lock();
-////    while(1){
-////        if(myrobot->left_dcmotor->readreadread()=="p\r\n" && myrobot->right_dcmotor->readreadread()=="p\r\n"){
-
-//////            waitting=false;
-//////            mymutex.unlock();
-////            qApp->processEvents();
-////            return false;
-////        }
-////        else
-//            return true;
-////    }
-//}

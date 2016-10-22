@@ -65,6 +65,7 @@ public:
     QPushButton *pushButton_R;
     QPushButton *pushButton_read;
     QPushButton *pushButton;
+    QPushButton *pushButton_run;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -103,7 +104,7 @@ public:
 
         doubleSpinBox_distance = new QDoubleSpinBox(groupBox_4);
         doubleSpinBox_distance->setObjectName(QStringLiteral("doubleSpinBox_distance"));
-        doubleSpinBox_distance->setValue(2);
+        doubleSpinBox_distance->setValue(1);
 
         verticalLayout->addWidget(doubleSpinBox_distance);
 
@@ -117,6 +118,7 @@ public:
         doubleSpinBox_angle->setMinimum(-90);
         doubleSpinBox_angle->setMaximum(90);
         doubleSpinBox_angle->setSingleStep(0.5);
+        doubleSpinBox_angle->setValue(10);
 
         verticalLayout->addWidget(doubleSpinBox_angle);
 
@@ -216,6 +218,9 @@ public:
         pushButton = new QPushButton(centralWidget);
         pushButton->setObjectName(QStringLiteral("pushButton"));
         pushButton->setGeometry(QRect(150, 240, 75, 23));
+        pushButton_run = new QPushButton(centralWidget);
+        pushButton_run->setObjectName(QStringLiteral("pushButton_run"));
+        pushButton_run->setGeometry(QRect(150, 290, 75, 23));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
@@ -318,6 +323,7 @@ public:
         pushButton_R->setShortcut(QApplication::translate("MainWindow", "Esc", 0));
         pushButton_read->setText(QApplication::translate("MainWindow", "Read", 0));
         pushButton->setText(QApplication::translate("MainWindow", "Run", 0));
+        pushButton_run->setText(QApplication::translate("MainWindow", "Run", 0));
     } // retranslateUi
 
 };

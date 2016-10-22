@@ -79,12 +79,19 @@ private slots:
 
     void on_pushButton_clicked();
 
+    void on_pushButton_run_clicked();
+
 private:
     Ui::MainWindow *ui;
     Mythread *mthread;
     //Mythread *mt;
     void checkbusy();
     bool busy;
+    void stringdivide(QString s);
+    QStringList temp;
+    QList<QStringList> ql;
+    void runpath(QList<QStringList> qsl);
+    void addintobuffer(int DIRECTION=0, double velocity=0 , double distance=0 , double angle=0);
 public slots:
     void docheck();
 };
